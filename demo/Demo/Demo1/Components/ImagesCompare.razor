@@ -1,0 +1,70 @@
+﻿<div class="section">
+    <style onload="(()=>
+        {
+            var img_compare = document.getElementById('img_compare');
+            img_compare .onmousemove = function(e)
+
+        {
+            var left = img_compare.offsetLeft;
+            var offsetNo = e.pageX - left;
+            var img_before = document.getElementById('img_before');
+            var toolbar = document.getElementById('toolbar');
+            if (offsetNo < 200)
+
+        {
+            img_before .style.width ='20px';
+            toolbar .style.left = '20px';
+        }
+
+        else if (offsetNo > 1040) {
+            img_before .style.width ='1220px';
+            toolbar .style.left = '1220px';
+        }
+
+        else {
+            img_before .style.width =offsetNo+'px';
+            toolbar .style.left = offsetNo+'px';
+        }
+
+        }
+        }
+        )()">
+    </style>
+    <div id="img_compare" class="img-box">
+        <div id="img_before" class="part-l">
+            <div class="img-before">
+                <img src="@BeforeImg" alt="" width="1240">
+            </div>
+        </div>
+        <span id="toolbar" class="toolbar"></span>
+        <div class="part-r">
+            <div class="img-after">
+                <img src="@AfterImg" alt="" width="1240">
+            </div>
+        </div>
+        <div class="tags">
+            <a href="@BeforeImg" download="@BeforeName">@BeforeTag</a>
+            <a href="@AfterImg" download="@AfterName">@AfterTag</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string BeforeImg { get; set; }
+
+    [Parameter]
+    public string AfterImg { get; set; }
+
+    [Parameter]
+    public string BeforeName { get; set; } = "before.jpg";
+
+    [Parameter]
+    public string AfterName { get; set; } = "after.jpg";
+
+    [Parameter]
+    public string BeforeTag { get; set; } = "之前";
+
+    [Parameter]
+    public string AfterTag { get; set; } = "之后";
+}

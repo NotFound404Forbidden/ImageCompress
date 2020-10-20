@@ -1,0 +1,49 @@
+﻿@page "/"
+
+@using Demo1.Components;
+@using System.Drawing;
+@using System.IO;
+@inject HttpClient Http
+
+<ImagesCompare BeforeImg="@beforeImage"
+               AfterImg="@afterImage"
+               BeforeName="@beforeName"
+               AfterName="@afterName"
+               BeforeTag="@beforeTag"
+               AfterTag="@afterTag"></ImagesCompare>
+
+@code {
+    private string beforeImage;
+    private string afterImage;
+    private string beforeName = "before.jpg";
+    private string afterName = "after.jpg";
+    private string beforeTag;
+    private string afterTag;
+
+    protected async override Task OnInitializedAsync()
+    {
+        using var bstream = await Http.GetStreamAsync("/img/aa.png");
+        using var astream = await Http.GetStreamAsync("/img/bb.png");
+
+        beforeTag = $"之前（{(bstream.Length / 1024.0).ToString("0.00")}K）";
+        afterTag = $"之后（{(astream.Length / 1024.0).ToString("0.00")}K）";
+
+        beforeImage = "data:image/jpeg;base64," + Convert.ToBase64String(StreamToByteArray(bstream));
+        afterImage = "data:image/jpeg;base64," + Convert.ToBase64String(StreamToByteArray(astream));
+    }
+
+    private byte[] StreamToByteArray(Stream stream)
+    {
+        IEnumerable<byte> GetBytes(Stream stream1)
+        {
+            int bt;
+
+            while ((bt = stream1.ReadByte()) != -1)
+            {
+                yield return (byte)bt;
+            }
+        }
+
+        return GetBytes(stream).ToArray();
+    }
+}
